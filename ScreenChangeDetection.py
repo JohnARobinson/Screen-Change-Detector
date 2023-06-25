@@ -18,7 +18,7 @@ refreshClicked = 0
 timeBetweenCheck = 300
 
 # 2hrs
-t_end = time.time() + 60 * 180
+t_end = time.time() + 60 * 480
 
 def refresh():
     #for clicking the refresh button
@@ -168,19 +168,25 @@ imageCmpMonth2()
 
 while time.time() < t_end:
 #month 1
+    print("Status: Starting...")
+    print("Status: click & recenter")
     time.sleep(5)
     reCenter()
     time.sleep(10)
+    print("Status: Image Check")
     imageCheckMonth1()
 
     time.sleep(10)
+    print("Status: Switch Month")
     nextMonth()
     time.sleep(10)
 
     #month 2
+    print("Status: click & recenter")
     time.sleep(5)
     reCenter()
     time.sleep(10)
+    print("Status: Image Check")
     imageCheckMonth2()
     """
     time.sleep(20)
@@ -199,24 +205,33 @@ while time.time() < t_end:
     """
 
     #wait time between checks currently 5min
+    print("Status: Waiting for: " + timeBetweenCheck + "minutes")
     time.sleep(timeBetweenCheck)
 
     #month 1
+    print("Status: click & refresh")
     refresh()
     time.sleep(20)
+    print("Status: click & recenter")
     reCenter()
     time.sleep(10)
+    print("Status: Image Test Check")
     imageTestMonth1()
+    print("Status: Image Compare")
     imageCmpMonth1()
     
     time.sleep(10)
+    print("Status: Switch Month")
     nextMonth()
     time.sleep(20)
     
     #month 2
     reCenter()
+    print("Status: click & recenter")
     time.sleep(20)
+    print("Status: Image Test Check")
     imageTestMonth2()
+    print("Status: Image Compare")
     imageCmpMonth2()
     """
     time.sleep(10)
@@ -233,5 +248,6 @@ while time.time() < t_end:
     nextMonth()
     time.sleep(10)
     """
+    print("Status: click & refresh, Starting Cycle Again!")
     refresh()
 

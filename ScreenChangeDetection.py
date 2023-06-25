@@ -6,11 +6,19 @@ import pyscreenshot
 import time
 import mouse
 
+import smtplib
+import ssl
+from email.message import EmailMessage
+import keyboard
+
 
 refreshClicked = 0
 
 #seconds
 timeBetweenCheck = 300
+
+# 2hrs
+t_end = time.time() + 60 * 180
 
 def refresh():
     #for clicking the refresh button
@@ -70,6 +78,7 @@ def imageCmpMonth1():
     diff = ImageChops.difference(im2, im1)
     if diff.getbbox():
         print("month 1 is different")
+        emailUpdate()
     else:
        print("month 1 is the same")
     #diff.show()
@@ -80,6 +89,7 @@ def imageCmpMonth2():
     diff = ImageChops.difference(im2, im1)
     if diff.getbbox():
         print("month 2 is different")
+        emailUpdate()
     else:
        print("month 2 is the same")
     #diff.show()
@@ -89,6 +99,7 @@ def imageCmpMonth3():
     diff = ImageChops.difference(im2, im1)
     if diff.getbbox():
         print("month 3 is different")
+        emailUpdate()
     else:
        print("month 3 is the same")
     #diff.show()
@@ -102,9 +113,29 @@ def mouseLocator():
     except KeyboardInterrupt:
         pass
 
+def emailUpdate():
+    email_address = 'jbotnotification@gmail.com'
+    email_password = 'sbmmsinptntqbumf'
+    email_receiver = 'globalpartners@verizon.net'
+    
+    subject = 'New Elisa Appointment Available!'
+    body = """
+    New Elisa Appointment Available!
+    https://www.sosi1.com/login
+    """
+    em = EmailMessage()
+    em['From'] = email_address
+    em['To'] = email_receiver
+    em['Subject'] = subject
+    em.set_content(body)
+    context = ssl.create_default_context()
 
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(email_address, email_password)
+        smtp.sendmail(email_address, email_receiver, em.as_string())
+        
 #initial test
-
+"""
 reCenter()
 time.sleep(10)
 imageCheckMonth1()
@@ -132,59 +163,75 @@ reCenter()
 time.sleep(10)
 imageTestMonth2()
 imageCmpMonth2()
-
+"""
 #planned 3 month test
-"""
+
+while time.time() < t_end:
 #month 1
-reCenter()
-time.sleep(10)
-imageCheckMonth1()
-time.sleep(10)
-nextMonth()
-time.sleep(10)
+    time.sleep(5)
+    reCenter()
+    time.sleep(10)
+    imageCheckMonth1()
 
-#month 2
-reCenter()
-time.sleep(10)
-imageCheckMonth2()
-time.sleep(10)
-nextMonth()
-time.sleep(10)
+    time.sleep(10)
+    nextMonth()
+    time.sleep(10)
 
-#month 3
-reCenter()
-time.sleep(10)
-imageCheckMonth3()
-time.sleep(10)
-nextMonth()
-time.sleep(10)
+    #month 2
+    time.sleep(5)
+    reCenter()
+    time.sleep(10)
+    imageCheckMonth2()
+    """
+    time.sleep(20)
+    nextMonth()
+    time.sleep(20)
+    """
+    #month 3
+    """
+    reCenter()
+    time.sleep(10)
+    imageCheckMonth3()
 
-#wait time between checks currently 5min
-time.sleep(timeBetweenCheck)
+    time.sleep(20)
+    nextMonth()
+    time.sleep(10)
+    """
 
-#month 1
-refresh()
-time.sleep(10)
-reCenter()
-time.sleep(10)
-imageTestMonth1()
-imageCmpMonth1()
-time.sleep(10)
-nextMonth()
-time.sleep(10)
+    #wait time between checks currently 5min
+    time.sleep(timeBetweenCheck)
 
-reCenter()
-time.sleep(10)
-imageTestMonth2()
-imageCmpMonth2()
-time.sleep(10)
-nextMonth()
-time.sleep(10)
+    #month 1
+    refresh()
+    time.sleep(20)
+    reCenter()
+    time.sleep(10)
+    imageTestMonth1()
+    imageCmpMonth1()
+    
+    time.sleep(10)
+    nextMonth()
+    time.sleep(20)
+    
+    #month 2
+    reCenter()
+    time.sleep(20)
+    imageTestMonth2()
+    imageCmpMonth2()
+    """
+    time.sleep(10)
+    nextMonth()
+    time.sleep(10)
+    """
+    #month 3
+    """
+    time.sleep(10)
+    imageTestMonth3()
+    imageCmpMonth3()
+    
+    time.sleep(10)
+    nextMonth()
+    time.sleep(10)
+    """
+    refresh()
 
-time.sleep(10)
-imageTestMonth3()
-imageCmpMonth3()
-time.sleep(10)
-nextMonth()
-time.sleep(10)
-"""

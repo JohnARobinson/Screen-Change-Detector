@@ -9,20 +9,32 @@ import mouse
 import smtplib
 import ssl
 from email.message import EmailMessage
-import keyboard
+from pygame import mixer
+from datetime import datetime
 
 
-refreshClicked = 0
+
+onediff = 0
+twodiff = 0
 
 #seconds
-timeBetweenCheck = 300
+timeBetweenCheck = 60
 
-# 2hrs
+# 8hrs
 t_end = time.time() + 60 * 480
+
+def sound():
+    mixer.init()
+    mixer.music.load("tts_appointment.mp3")
+    mixer.music.play()
+
+    while mixer.music.get_busy():  
+        time.sleep(1)
 
 def refresh():
     #for clicking the refresh button
-    pg.click(84,50)
+    #pg.click(84,50)
+    pg.click(84,55)
              #x , y   
 def initialCheck():
     pic = pyscreenshot.grab(bbox=(120, 360, 1660, 900))
@@ -32,42 +44,53 @@ def initialCheck():
 def reCenter():
     #scroll after refresh to insure correct calender location
     pg.click(0, 200)
-    mouse.wheel(-20)
+    #mouse.wheel(-20)
+    mouse.wheel(20)
 def nextMonth():
     #click right most icon moving calender foward a month
     pg.click(0, 200)
     mouse.wheel(20)
     time.sleep(10)
     #pg.moveTo(1215, 410)
-    pg.click(1215, 410)
+    #pg.click(1215, 435)
+    pg.click(605, 285)
 
 
 
 #save image for first 3 months  
 def imageCheckMonth1():
-    pic = pyscreenshot.grab(bbox=(120, 360, 1660, 900))
+    #pic = pyscreenshot.grab(bbox=(120, 300, 1660, 900))
+    pic = pyscreenshot.grab(bbox=(60, 300, 900, 1000))
     #pic.show()
+    time.sleep(15)
     pic.save("sc1.png")
+    time.sleep(15)
 def imageCheckMonth2():
-    pic = pyscreenshot.grab(bbox=(120, 360, 1660, 900))
+    pic = pyscreenshot.grab(bbox=(60, 300, 900, 1000))
     #pic.show()
+    time.sleep(15)
     pic.save("sc2.png")
+    time.sleep(15)
 def imageCheckMonth3():
-    pic = pyscreenshot.grab(bbox=(120, 360, 1660, 900))
+    pic = pyscreenshot.grab(bbox=(60, 300, 900, 1000))
     #pic.show()
     pic.save("sc3.png")
 
 #test image for first 3 months    
 def imageTestMonth1():
-    pic = pyscreenshot.grab(bbox=(120, 360, 1660, 900))
+    pic = pyscreenshot.grab(bbox=(60, 300, 900, 1000))
     #pic.show()
+    time.sleep(15)
     pic.save("sc1_test.png")
+    time.sleep(15)
 def imageTestMonth2():
-    pic = pyscreenshot.grab(bbox=(120, 360, 1660, 900))
+    pic = pyscreenshot.grab(bbox=(60, 300, 900, 1000))
     #pic.show()
+    time.sleep(15)
     pic.save("sc2_test.png")
+    time.sleep(15)
 def imageTestMonth3():
-    pic = pyscreenshot.grab(bbox=(120, 360, 1660, 900))
+    pic = pyscreenshot.grab(bbox=(60, 300, 900, 1000))
     #pic.show()
     pic.save("sc3_test.png")
     
@@ -77,8 +100,14 @@ def imageCmpMonth1():
     im2 = Image.open("sc1_test.png")
     diff = ImageChops.difference(im2, im1)
     if diff.getbbox():
-        print("month 1 is different")
-        emailUpdate()
+        print("month 1 is different##########################")
+
+        sound()
+        onediff = 1
+        time.sleep(5)
+        emailUpdateL()
+        emailUpdateJ()
+        onediff = 0
     else:
        print("month 1 is the same")
     #diff.show()
@@ -88,8 +117,14 @@ def imageCmpMonth2():
     im2 = Image.open("sc2_test.png")
     diff = ImageChops.difference(im2, im1)
     if diff.getbbox():
-        print("month 2 is different")
-        emailUpdate()
+        print("month 2 is different ########################")
+
+        sound()
+        twodiff = 1
+        time.sleep(5)
+        emailUpdateL()
+        emailUpdateJ()
+        twodiff = 0
     else:
        print("month 2 is the same")
     #diff.show()
@@ -99,7 +134,9 @@ def imageCmpMonth3():
     diff = ImageChops.difference(im2, im1)
     if diff.getbbox():
         print("month 3 is different")
-        emailUpdate()
+        sound()
+        emailUpdateL()
+        emailUpdateJ()
     else:
        print("month 3 is the same")
     #diff.show()
@@ -113,15 +150,17 @@ def mouseLocator():
     except KeyboardInterrupt:
         pass
 
-def emailUpdate():
-    email_address = '********************'
-    email_password = '********************'
-    email_receiver = '********************'
+def emailUpdateL():
+    email_address = 'jbotnotification@gmail.com'
+    email_password = 'sbmmsinptntqbumf'
+    email_receiver = 'globalpartners@verizon.net'
     
     subject = 'New Elisa Appointment Available!'
     body = """
-    New Appointment Available!
-    website
+    New Elisa Appointment Available!
+    https://www.sosi1.com/login
+
+    Time of Appointment: 
     """
     em = EmailMessage()
     em['From'] = email_address
@@ -133,121 +172,120 @@ def emailUpdate():
     with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
         smtp.login(email_address, email_password)
         smtp.sendmail(email_address, email_receiver, em.as_string())
-        
-#initial test
+
+
+def emailUpdateJ():
+    email_address = 'jbotnotification@gmail.com'
+    email_password = 'sbmmsinptntqbumf'
+    email_receiver = 'jrobinson843@gmail.com'
+    
+    subject = 'New Elisa Appointment Available!'
+    body = """
+    New Elisa Appointment Available!
+    https://www.sosi1.com/login
+    
+    Time of Appointment: 
+    """
+    em = EmailMessage()
+    em['From'] = email_address
+    em['To'] = email_receiver
+    em['Subject'] = subject
+    em.set_content(body) 
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(email_address, email_password)
+        smtp.sendmail(email_address, email_receiver, em.as_string())
+
+
+def updateTime():
+    now = datetime.now()
+    current_time = now.strftime("%H:%M")
+    return(current_time)
+
+emailUpdateL()
+#////////////////////////
+#test area
+
+
+#///////////////////////
 """
-reCenter()
-time.sleep(10)
-imageCheckMonth1()
-#wait 1 min
-time.sleep(30)
-refresh()
-time.sleep(10)
-reCenter()
-time.sleep(10)
-imageTestMonth1()
-imageCmpMonth1()
-
-time.sleep(20)
-nextMonth()
-time.sleep(10)
-
-reCenter()
-time.sleep(10)
-imageCheckMonth2()
-#wait 1 min
-time.sleep(30)
-refresh()
-time.sleep(10)
-reCenter()
-time.sleep(10)
-imageTestMonth2()
-imageCmpMonth2()
-"""
-#planned 3 month test
-
 while time.time() < t_end:
+    current_time = 0
 #month 1
+
+    current_time = updateTime()
     print("Status: Starting...")
-    print("Status: click & recenter")
+    current_time = updateTime()
+    print("Status: ",current_time,": click & recenter")
     time.sleep(5)
     reCenter()
-    time.sleep(10)
-    print("Status: Image Check")
+    time.sleep(15)
+    current_time = updateTime()
+    print("Status: ",current_time,": Image Check 1")
     imageCheckMonth1()
 
-    time.sleep(10)
-    print("Status: Switch Month")
+    time.sleep(15)
+    current_time = updateTime()
+    print("Status: ", current_time, ": Switch Month")
     nextMonth()
-    time.sleep(10)
+    time.sleep(15)
 
     #month 2
-    print("Status: click & recenter")
+    current_time = updateTime()
+    print("Status: ", current_time, ": click & recenter")
     time.sleep(5)
     reCenter()
-    time.sleep(10)
-    print("Status: Image Check")
+    time.sleep(15)
+    current_time = updateTime()
+    print("Status: ", current_time, ": Image Check 2")
     imageCheckMonth2()
-    """
-    time.sleep(20)
-    nextMonth()
-    time.sleep(20)
-    """
-    #month 3
-    """
-    reCenter()
-    time.sleep(10)
-    imageCheckMonth3()
-
-    time.sleep(20)
-    nextMonth()
-    time.sleep(10)
-    """
+    time.sleep(15)
 
     #wait time between checks currently 5min
-    print("Status: Waiting for: " + timeBetweenCheck + "minutes")
+    current_time = updateTime()
+    print("Status: ",current_time,": Waiting for: ")
+    print(timeBetweenCheck / 60)
+    print("minutes")
     time.sleep(timeBetweenCheck)
 
     #month 1
-    print("Status: click & refresh")
+    current_time = updateTime()
+    print("Status: ", current_time, ": click & refresh")
     refresh()
     time.sleep(20)
-    print("Status: click & recenter")
+    current_time = updateTime()
+    print("Status: ", current_time, ": click & recenter")
     reCenter()
-    time.sleep(10)
-    print("Status: Image Test Check")
+    time.sleep(15)
+    current_time = updateTime()
+    print("Status: ", current_time, ": Image Test Check 1")
     imageTestMonth1()
-    print("Status: Image Compare")
+    time.sleep(15)
+    current_time = updateTime()
+    print("Status: ", current_time, ": Image Compare 1")
     imageCmpMonth1()
     
-    time.sleep(10)
-    print("Status: Switch Month")
+    time.sleep(15)
+    current_time = updateTime()
+    print("Status: ", current_time, ": Switch Month")
     nextMonth()
     time.sleep(20)
     
     #month 2
     reCenter()
-    print("Status: click & recenter")
+    current_time = updateTime()
+    print("Status: ", current_time, ": click & recenter")
     time.sleep(20)
-    print("Status: Image Test Check")
+    current_time = updateTime()
+    print("Status: ", current_time, ": Image Test Check 2")
     imageTestMonth2()
-    print("Status: Image Compare")
+    time.sleep(15)
+    current_time = updateTime()
+    print("Status: ", current_time, ": Image Compare 2")
     imageCmpMonth2()
-    """
-    time.sleep(10)
-    nextMonth()
-    time.sleep(10)
-    """
-    #month 3
-    """
-    time.sleep(10)
-    imageTestMonth3()
-    imageCmpMonth3()
     
-    time.sleep(10)
-    nextMonth()
-    time.sleep(10)
-    """
-    print("Status: click & refresh, Starting Cycle Again!")
+    current_time = updateTime()
+    print("Status: ", current_time, ": click & refresh, Starting Cycle Again!")
     refresh()
-
+"""

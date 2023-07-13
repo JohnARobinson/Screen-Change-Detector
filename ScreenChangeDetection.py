@@ -12,6 +12,8 @@ from email.message import EmailMessage
 from pygame import mixer
 from datetime import datetime
 
+import os
+
 
 
 onediff = 0
@@ -43,7 +45,7 @@ def initialCheck():
     
 def reCenter():
     #scroll after refresh to insure correct calender location
-    pg.click(0, 200)
+    pg.click(10, 200)
     #mouse.wheel(-20)
     mouse.wheel(20)
 def nextMonth():
@@ -103,6 +105,9 @@ def imageCmpMonth1():
         print("month 1 is different##########################")
 
         sound()
+        
+        #os.remove("sc1.png")
+        #os.remove("sc1_test.png")
         onediff = 1
         time.sleep(5)
         emailUpdateL()
@@ -119,7 +124,11 @@ def imageCmpMonth2():
     if diff.getbbox():
         print("month 2 is different ########################")
 
+        #play sound
+        
         sound()
+        
+
         twodiff = 1
         time.sleep(5)
         emailUpdateL()
@@ -160,7 +169,6 @@ def emailUpdateL():
     New Elisa Appointment Available!
     https://www.sosi1.com/login
 
-    Time of Appointment: 
     """
     em = EmailMessage()
     em['From'] = email_address
@@ -184,7 +192,7 @@ def emailUpdateJ():
     New Elisa Appointment Available!
     https://www.sosi1.com/login
     
-    Time of Appointment: 
+    
     """
     em = EmailMessage()
     em['From'] = email_address
@@ -203,13 +211,22 @@ def updateTime():
     current_time = now.strftime("%H:%M")
     return(current_time)
 
-emailUpdateL()
+
 #////////////////////////
 #test area
 
+#refresh()
+
+#zoom out to 50%
+
+#imageCheckMonth1()
+#imageTestMonth1()
+#imageCmpMonth1()
+
+
 
 #///////////////////////
-"""
+
 while time.time() < t_end:
     current_time = 0
 #month 1
@@ -220,7 +237,7 @@ while time.time() < t_end:
     print("Status: ",current_time,": click & recenter")
     time.sleep(5)
     reCenter()
-    time.sleep(15)
+    time.sleep(25)
     current_time = updateTime()
     print("Status: ",current_time,": Image Check 1")
     imageCheckMonth1()
@@ -236,7 +253,7 @@ while time.time() < t_end:
     print("Status: ", current_time, ": click & recenter")
     time.sleep(5)
     reCenter()
-    time.sleep(15)
+    time.sleep(25)
     current_time = updateTime()
     print("Status: ", current_time, ": Image Check 2")
     imageCheckMonth2()
@@ -257,7 +274,7 @@ while time.time() < t_end:
     current_time = updateTime()
     print("Status: ", current_time, ": click & recenter")
     reCenter()
-    time.sleep(15)
+    time.sleep(25)
     current_time = updateTime()
     print("Status: ", current_time, ": Image Test Check 1")
     imageTestMonth1()
@@ -270,7 +287,7 @@ while time.time() < t_end:
     current_time = updateTime()
     print("Status: ", current_time, ": Switch Month")
     nextMonth()
-    time.sleep(20)
+    time.sleep(30)
     
     #month 2
     reCenter()
@@ -288,4 +305,3 @@ while time.time() < t_end:
     current_time = updateTime()
     print("Status: ", current_time, ": click & refresh, Starting Cycle Again!")
     refresh()
-"""

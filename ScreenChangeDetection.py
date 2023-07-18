@@ -160,14 +160,14 @@ def mouseLocator():
         pass
 
 def emailUpdateL():
-    email_address = 'jbotnotification@gmail.com'
-    email_password = 'sbmmsinptntqbumf'
-    email_receiver = 'globalpartners@verizon.net'
+    email_address = '*************************'
+    email_password = '*************************'
+    email_receiver = '*************************'
     
-    subject = 'New Elisa Appointment Available!'
+    subject = 'New Appointment Available!'
     body = """
-    New Elisa Appointment Available!
-    https://www.sosi1.com/login
+    New Appointment Available!
+    *************************
 
     """
     em = EmailMessage()
@@ -183,14 +183,14 @@ def emailUpdateL():
 
 
 def emailUpdateJ():
-    email_address = 'jbotnotification@gmail.com'
-    email_password = 'sbmmsinptntqbumf'
-    email_receiver = 'jrobinson843@gmail.com'
+    email_address = '*************************'
+    email_password = '*************************'
+    email_receiver = '*************************'
     
-    subject = 'New Elisa Appointment Available!'
+    subject = 'New Appointment Available!'
     body = """
-    New Elisa Appointment Available!
-    https://www.sosi1.com/login
+    New Appointment Available!
+    *************************
     
     
     """
